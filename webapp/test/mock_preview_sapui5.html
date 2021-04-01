@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SAPUI5 Walkthrough - TestPage</title>
+	<script
+		id="sap-ui-bootstrap"
+		src="http://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_belize"
+		data-sap-ui-libs="sap.m"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-XX-bindingSyntax="complex"
+		data-sap-ui-async="true"
+	    data-sap-ui-oninit="module:sap/ui/demo/walkthrough/test/initMockServer"
+		data-sap-ui-resourceroots='{
+			"sap.ui.demo.walkthrough": "../"
+		}'>
+
+	</script>
+<script>
+var bRunWithMock = true;
+var sRunWithMock = jQuery.sap.getUriParameters().get('run-with-mock');
+if (sRunWithMock === 'false') {
+bRunWithMock = false;
+}
+if (bRunWithMock) {
+jQuery.sap.require('sap.ui.core.util.MockServer');
+var uri = '/V2/Northwind/Northwind.svc/';
+var oMock = new sap.ui.core.util.MockServer({rootUri : uri});
+var _sAppModulePath = "sap.ui.demo.walkthrough/";
+var sMetadataPath = "../localService/metadata.xml";
+var sMetadataUrl = jQuery.sap.getModulePath(_sAppModulePath + sMetadataPath.replace(".xml", ""), ".xml");
+var sMockdataBaseUrlPath = sMetadataUrl.replace(/[^/]+$/, 'mockdata');
+oMock.simulate(sMetadataUrl, { sMockdataBaseUrl : sMockdataBaseUrlPath, bGenerateMissingMockData : true });
+oMock.start();
+	jQuery(document).ready(function($) {  sap.m.MessageToast.show('Running in demo mode with mock data.', {  duration : 4000 });
+});
+}
+</script>
+
+</head>
+<body class="sapUiBody" id="content">
+<div data-sap-ui-component data-name="sap.ui.demo.walkthrough" data-id="container" data-settings='{"id" : "walkthrough"}'></div>	
+</body>
+</html>
